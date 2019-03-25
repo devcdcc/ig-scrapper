@@ -4,7 +4,7 @@ import config from './config'
 var storage = new Client.CookieFileStorage(__dirname + '/../cookies/someuser.json');
 // const Sequelize = require('sequelize');
 
-import  Sequelize  from "sequelize";
+import  {Sequelize}  from "sequelize";
 const sequelize = new Sequelize(config.dbAuth.namespace, config.dbAuth.user, config.dbAuth.password, config.database);
 
 sequelize

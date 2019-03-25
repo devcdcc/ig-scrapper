@@ -1,6 +1,4 @@
-import { Dialect, Options } from "sequelize/types";
-import { OperatorsAliases } from "../node_modules2/sequelize/types";
-import { SequelizeOptions } from "../node_modules2/sequelize-typescript/dist";
+import { Dialect, Options, OperatorsAliases } from "sequelize/types";
 
 let dbOptions : Options | OperatorsAliases = {
   host: 'localhost',
