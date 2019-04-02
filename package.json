@@ -2,14 +2,15 @@
   "name": "acme-instagram-js",
   "version": "1.0.0",
   "dependencies": {
+    "@types/bluebird": "^3.5.26",
+    "@types/validator": "^10.9.0",
     "instagram-private-api": "^0.6.8",
     "mysql2": "^1.6.5",
     "reflect-metadata": "^0.1.13",
-    "sequelize": "^5.1.1",
-    "sequelize-typescript": "^1.0.0-alpha.9"
+    "sequelize": "^5.1.1"
   },
   "devDependencies": {
-    "@types/node": "^10.12.21",
+    "@types/node": "^10.14.3",
     "nodemon": "^1.18.9",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.1"

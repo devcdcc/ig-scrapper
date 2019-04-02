@@ -1,6 +1,6 @@
 var IG = require('instagram-private-api').V1;
 import config from './config'
-import {Sequelize} from "sequelize-typescript";
+import {Sequelize} from "sequelize";
 // import Sequelize from "sequelize";
 // import { any } from 'bluebird';
 
