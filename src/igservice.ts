@@ -1,6 +1,9 @@
-var IG = require('instagram-private-api').V1;
+const { V1: IG } = require('instagram-private-api');
+//import {Promise} from 'bluebird'
+import { MongoClient, Collection } from 'mongodb'
 import config from './config'
-import {Sequelize} from "sequelize";
+import { Promise } from 'bluebird';
+
 // import Sequelize from "sequelize";
 // import { any } from 'bluebird';
 
@@ -12,13 +15,55 @@ process.env.UV_THREADPOOL_SIZE = "10";
 /********* COOCKIES HANDLING*********/
 var device = new IG.Device('danielc-laptop');
 var storage = new IG.CookieFileStorage(__dirname + '/../cookies/someuser.json');
+
+// Connection url
+const mongoURL = 'mongodb://localhost:27017';
+// Database Name
+const dbName = 'test';
+
+export const mongo: Promise<MongoClient> = MongoClient.connect(config.db.url, config.db.options)
+export function collection(collectionName: string){ 
+  return mongo.then(client => client.db(config.db.namespace)).then(db => db.collection(collectionName)) 
+}
 /**
  * Default class with connection
  */
-class IGSerice {
-  sequelize = new Sequelize(config.dbAuth.namespace, config.dbAuth.user, config.dbAuth.password, config.database);
-  getAccount() {
-    return IG.Session.create(device, storage, credentials.email, credentials.password)
+export function removeKey(obj: any[] | any, ...keySet: Array<string>) {
+  if (obj != null && (typeof obj.isArray == 'function' || typeof obj.map == 'function' || typeof obj.forEach == 'function')) {
+    return obj.map((data: any) => removeKey(data, ...keySet))
+  } else
+    for (var prop in obj) {
+      if (keySet.includes(prop))
+        delete obj[prop];
+      else if (typeof obj[prop] === 'object')
+        removeKey(obj[prop], ...keySet);
+    }
+  return obj
+}
+export function asParentChildPair(parent: any, data: Array<any>) {
+  return data.map(e => { return { 'parent': parent, 'child': e.id } });
+}
+export class IGService {
+  defaultSize = Infinity
+  // db = this.mongo.then(client => client.db(config.db.namespace))
+  protected asParentChildPair(parent: any, data: Array<any>) {
+    return data.map(e => { return { 'parent': parent, 'child': e.id } });
+  }
+  public static removeKey(obj: Array<any> | any, ...keyElement: Array<string>) {
+    if (typeof obj.isArray == 'function' || typeof obj.map == 'function' || typeof obj.forEach == 'function') {
+      return obj.map((data: any) => IGService.removeKey(data, ...keyElement))
+    } else
+      for (var prop in obj) {
+        if (keyElement.includes(prop))
+          delete obj[prop];
+        else if (typeof obj[prop] === 'object')
+          IGService.removeKey(keyElement, obj[prop]);
+      }
+    return obj
+  }
+  
+  getAccount(doOnSuccess: (session: any, account: any) => any, doOnError: (ex: Error) => any = function (_) { }) {
+    return Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))
       .then((session: any) => {
         // console.log(session)
         // IG.Account.showProfile(session).then((selfAccount: any) => {
@@ -29,11 +74,14 @@ class IGSerice {
         // let account = IG.Account.searchForUser(session, 'dev.cdcc')
         let account = IG.Account.showProfile(session)
         return [session, account]
-      });
+      }).spread(doOnSuccess).catch(doOnError);
   }
-  login(doOnSucces: (session: any) => any, doOnError: (ex: Error) => any = function (_) { }) {
-    IG.Session.create(device, storage, credentials.email, credentials.password)
-      .then(doOnSucces
+  public siging(){
+    return Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))
+  }
+  public login(doOnSuccess: (session: any) => any, doOnError: (ex: Error) => any = function (_) { }) {
+    return Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))
+      .then(doOnSuccess
         //   (session: any) => {
         //   // console.log(session)
         //   doOnSucces(session)
@@ -51,7 +99,7 @@ class IGSerice {
 
 
 
-  prueba() {
+  private prueba() {
     // const Sequelize = require('sequelize');
 
 
@@ -136,7 +184,7 @@ class IGSerice {
         });
       });
     })
-    this.getAccount().spread((session: any, account: any) => {
+    this.getAccount((session: any, account: any) => {
       console.log("###############################################################")
       let feed = new IG.Feed.UserMedia(session, 375222529, 5);
       feed.all().then((data: any) => {
@@ -150,35 +198,32 @@ class IGSerice {
       return feed;
     })
 
-    this.getAccount()
-      .spread((session: any, account: any) => {
-        console.log("###############################################################")
-        let feed = new IG.Feed.AccountFollowers(session, account.id, Infinity);
-        // let feed = new IG.Feed.AccountFollowers(session, '375222529',Infinity);
-        feed.all().then((data: any) => {
-          data.forEach((account: any) => {
-            if (!a[0]) {
-              a[0] = true
-              // console.log(JSON.stringify(account._params))
-            }
-          });
+    this.getAccount((session: any, account: any) => {
+      console.log("###############################################################")
+      let feed = new IG.Feed.AccountFollowers(session, account.id, Infinity);
+      // let feed = new IG.Feed.AccountFollowers(session, '375222529',Infinity);
+      feed.all().then((data: any) => {
+        data.forEach((account: any) => {
+          if (!a[0]) {
+            a[0] = true
+            // console.log(JSON.stringify(account._params))
+          }
         });
-        return feed;
-      })
-    this.getAccount()
-      .spread((session: any, account: any) => {
-        console.log("###############################################################")
-        let feed = new IG.Feed.AccountFollowing(session, account.id, Infinity);
-        feed.get().then((data: any) => {
-          data.forEach((account: any) => {
-            if (a[1]) {
-              a[1] = true
-              // console.log(JSON.stringify(account._params))
-            }
-          });
+      });
+      return feed;
+    })
+    this.getAccount((session: any, account: any) => {
+      console.log("###############################################################")
+      let feed = new IG.Feed.AccountFollowing(session, account.id, Infinity);
+      feed.get().then((data: any) => {
+        data.forEach((account: any) => {
+          if (a[1]) {
+            a[1] = true
+            // console.log(JSON.stringify(account._params))
+          }
         });
-        return feed;
-      })
+      });
+      return feed;
+    })
   }
 }
-export = IGSerice

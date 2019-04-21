@@ -4,19 +4,19 @@ import config from './config'
 var storage = new Client.CookieFileStorage(__dirname + '/../cookies/someuser.json');
 // const Sequelize = require('sequelize');
 
-import  {Sequelize}  from "sequelize";
-const sequelize = new Sequelize(config.dbAuth.namespace, config.dbAuth.user, config.dbAuth.password, config.database);
+// import  {Sequelize}  from "sequelize";
+// const sequelize = new Sequelize(config.dbAuth.namespace, config.dbAuth.user, config.dbAuth.password, config.database);
 
-sequelize
-  .authenticate()
-            // console.log(selfAccount)
-  .then(() => {
+// sequelize
+//   .authenticate()
+//             // console.log(selfAccount)
+//   .then(() => {
     
-    console.log('Connection has been established successfully.');
-  }).catch((exception:Error)=>{
-      console.log(exception)
-    console.log("se ha encontrado un error")
-  })
+//     console.log('Connection has been established successfully.');
+//   }).catch((exception:Error)=>{
+//       console.log(exception)
+//     console.log("se ha encontrado un error")
+//   })
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "1";

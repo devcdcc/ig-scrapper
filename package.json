@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "dependencies": {
     "@types/bluebird": "^3.5.26",
+    "@types/mongodb": "^3.1.24",
     "@types/validator": "^10.9.0",
+    "events": "^3.0.0",
     "instagram-private-api": "^0.6.8",
-    "mysql2": "^1.6.5",
-    "reflect-metadata": "^0.1.13",
-    "sequelize": "^5.1.1"
+    "mongodb": "^3.2.3",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@types/node": "^10.14.3",

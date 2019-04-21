@@ -86,11 +86,38 @@ CREATE TABLE IF NOT EXISTS `IGFollowing` (
     `id` BIGINT
 );
 
+drop table if exists `IGComments`;
+CREATE TABLE IF NOT EXISTS `IGComments` (
+    `pk` BIGINT,
+    `userId` BIGINT,
+    `text` TEXT,
+    `type` INT,
+    `createdAt` BIGINT,
+    `createdAtUtc` BIGINT,
+    `contentType` VARCHAR(32) CHARACTER SET utf8,
+    `status` VARCHAR(32) CHARACTER SET utf8,
+    `bitFlags` BIGINT,
+    `didReportAsSpam`  boolean,
+    `shareEnabled`  boolean,
+    `hasLikedComment` boolean,
+    `commentLikeCount` INT,
+    `inlineComposerDisplayCondition` VARCHAR(32) CHARACTER SET utf8,
+    `mediaId` VARCHAR(64) CHARACTER SET utf8,
+    `created` BIGINT,
+    `id` BIGINT
+);
+drop table if exists `IGLikers`;
+CREATE TABLE IF NOT EXISTS `IGLikers`(
+    `id`: BIGINT,
+    `media` VARCHAR(64) CHARACTER SET utf8,
+    `username` VARCHAR(64) CHARACTER SET utf8
+
+);
 drop table if exists `IGMedia`;
 CREATE TABLE IF NOT EXISTS `IGMedia` (
+    `id` VARCHAR(64) CHARACTER SET utf8,
     `takenAt` BIGINT,
     `pk` BIGINT,
-    `id` VARCHAR(64) CHARACTER SET utf8,
     `deviceTimestamp` INT,
     `mediaType` INT,
     `carouselMediaCount` INT,
@@ -107,9 +134,7 @@ CREATE TABLE IF NOT EXISTS `IGMedia` (
     `canViewMorePreviewComments` BOOLEAN,
     `commentCount` INT,
     `inlineComposerDisplayCondition` VARCHAR(18) CHARACTER SET utf8,
-    `imageVersions2_candidates_width` INT,
-    `imageVersions2_candidates_height` INT,
-    `imageVersions2_candidates_url` VARCHAR(248) CHARACTER SET utf8,
+    `imageVersions2` JSON,
     `originalWidth` INT,
     `originalHeight` INT,
     `location` JSON,

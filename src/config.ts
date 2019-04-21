@@ -1,30 +1,23 @@
-import { Dialect, Options, OperatorsAliases } from "sequelize/types";
+import { MongoClientOptions } from "mongodb";
 
-let dbOptions : Options | OperatorsAliases = {
-  host: 'localhost',
-  port:3306,
-  dialect: "mysql",
-  operatorsAliases: false,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-} 
+
+let dbOptions: MongoClientOptions = {
+  autoReconnect: true,
+  reconnectTries: Infinity,
+  // auth: {
+  //   user: "",
+  //   password: ""
+  // }
+}
 var config = {
-    database: dbOptions,
-      dbAuth :{
-        namespace:`instagramData`,
-        user: `root`,
-        password:`root`,
-        host:`localhost`,
-        port:`3306`,
-        dialect: 'mysql'
-    },
-    credentials : {
-        email: 'danielc@acmecomunicacion.com',
-        password: 'vQPvqTPLBPX74bQ'
-    }
+  db: {
+    options: dbOptions,
+    namespace: "test",
+    url: 'mongodb://localhost:27017'
+  },
+  credentials: {
+    email: 'danielc@acmecomunicacion.com',
+    password: 'vQPvqTPLBPX74bQ'
+  }
 }
 export = config;
