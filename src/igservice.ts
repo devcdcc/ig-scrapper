@@ -3,7 +3,7 @@ const { V1: IG } = require('instagram-private-api');
 import { MongoClient, Collection } from 'mongodb'
 import config from './config'
 import { Promise } from 'bluebird';
-
+import * as Bluebird from 'bluebird';
 // import Sequelize from "sequelize";
 // import { any } from 'bluebird';
 
@@ -16,14 +16,9 @@ process.env.UV_THREADPOOL_SIZE = "10";
 var device = new IG.Device('danielc-laptop');
 var storage = new IG.CookieFileStorage(__dirname + '/../cookies/someuser.json');
 
-// Connection url
-const mongoURL = 'mongodb://localhost:27017';
-// Database Name
-const dbName = 'test';
-
-export const mongo: Promise<MongoClient> = MongoClient.connect(config.db.url, config.db.options)
-export function collection(collectionName: string){ 
-  return mongo.then(client => client.db(config.db.namespace)).then(db => db.collection(collectionName)) 
+const mongo: Promise<MongoClient> = MongoClient.connect(config.db.url, config.db.options)
+export function collection(collectionName: string) {
+  return mongo.then(client => client.db(config.db.namespace)).then(db => db.collection(collectionName))
 }
 /**
  * Default class with connection
@@ -49,21 +44,21 @@ export class IGService {
   protected asParentChildPair(parent: any, data: Array<any>) {
     return data.map(e => { return { 'parent': parent, 'child': e.id } });
   }
-  public static removeKey(obj: Array<any> | any, ...keyElement: Array<string>) {
-    if (typeof obj.isArray == 'function' || typeof obj.map == 'function' || typeof obj.forEach == 'function') {
-      return obj.map((data: any) => IGService.removeKey(data, ...keyElement))
-    } else
-      for (var prop in obj) {
-        if (keyElement.includes(prop))
-          delete obj[prop];
-        else if (typeof obj[prop] === 'object')
-          IGService.removeKey(keyElement, obj[prop]);
-      }
-    return obj
+  public dataStorage(keyMap: any, data: Array<any>, collectionName: string) {
+    return collection(collectionName)
+      .then(collection => collection.insertMany(
+        [...removeKey(data.map(e => Object.assign(e._params, keyMap)), "_session", "account")])
+      )
+      .then(result =>
+        result.insertedCount == data.length ?
+          console.log(`All has been inserted ${result.insertedCount} records into ${collectionName}.`)
+          :
+          console.error(`Error, only has been inserted ${result.insertedCount} of ${data.length} records into ${collectionName}.`)
+      ).catch(reason => console.error(`Error inserting ${data.length} records into ${collectionName}. Reason ${reason}`))
   }
   
   getAccount(doOnSuccess: (session: any, account: any) => any, doOnError: (ex: Error) => any = function (_) { }) {
-    return Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))
+    return Bluebird.Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))
       .then((session: any) => {
         // console.log(session)
         // IG.Account.showProfile(session).then((selfAccount: any) => {
@@ -76,8 +71,21 @@ export class IGService {
         return [session, account]
       }).spread(doOnSuccess).catch(doOnError);
   }
-  public siging(){
+  /**
+   * Returns a Bluebird promise with a new session 
+   */
+  public siging() {
     return Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))
+  }
+  /**
+   * 
+   * returns a Bluebird<[session, account]>
+   * you can use spread to map it as (session, account) tuple
+   * spred will return a promise
+   * 
+   */
+  public account() {
+    this.siging().then(session => [session, IG.Account.showProfile(session)])
   }
   public login(doOnSuccess: (session: any) => any, doOnError: (ex: Error) => any = function (_) { }) {
     return Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))

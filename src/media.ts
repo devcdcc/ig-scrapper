@@ -2,33 +2,17 @@ import { IGService } from './igservice'
 const { V1: IG } = require('instagram-private-api');
 
 class Media extends IGService {
-    public userMediaHandler(userId: number, handler: (dataArray: Array<any>) => any) {
-        this.login((session) => {
-            new IG.Feed.UserMedia(session, userId, this.defaultSize).all().then((data: Array<any>) => {
-                handler(data.map(_ => _.params))
-            });
-        })
-    }
-    public userMediaStorage(userId: number) {
-        let _vm = this
-        this.userMediaHandler(userId, function (data: Array<any>) {
-            console.log(data.length)
-        })
+    public userMediaHandler(userId: number) {
+        return this.siging().then(session => new IG.Feed.UserMedia(session, userId, this.defaultSize).all())
     }
     /**
      * getMediaCommentsHandler
      */
-    public getMediaCommentsHandler(mediaId: string, handler: (media: string, dataArray: Array<any>) => any) {
-        this.login((session) => {
-            console.log("session started")
-            let feed = new IG.Feed.MediaComments(
-                session,
-                mediaId,
-            );
-            feed.all().then((data: Array<any>) => {
-                handler(mediaId, data)
-            })
-        })
+    public getMediaCommentsHandler(mediaId: string) {
+        this.siging().then(session => new IG.Feed.MediaComments(
+            session,
+            mediaId,
+        ).all())
     }
     /**
      * getMediaLikersHandler
@@ -69,7 +53,7 @@ function handler(mediaId: string, data: Array<any>) {
 }
 media.login(function (session: any) {
     IG.Account.searchForUser(session, 'luna2d').then((user: any) => {
-        media.userMediaHandler(user.id, function (data: Array<any>) {
+        media.userMediaHandler(user.id).then(data => {
             console.log(Object.keys(data[0]))
             console.log(Object.keys(data[0]).length)
             console.log(data[0])
