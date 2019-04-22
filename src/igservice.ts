@@ -63,8 +63,8 @@ export class IGService {
    * spred will return a promise
    * 
    */
-  public account() {
-    this.login().then(session => [session, IG.Account.showProfile(session)])
+  public user() {
+    return this.login().then(session => [session, IG.Account.showProfile(session)])
   }
   /**
    * Returns a Bluebird promise with a new session 

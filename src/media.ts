@@ -1,7 +1,7 @@
 import { IGService } from './igservice'
 const { V1: IG } = require('instagram-private-api');
 
-class Media extends IGService {
+export default class Media extends IGService {
   public userMediaHandler(userId: number) {
     return this.login().then(session => new IG.Feed.UserMedia(session, userId, this.defaultSize).all())
   }
@@ -18,15 +18,6 @@ class Media extends IGService {
     return this.login().then(session => new IG.Media.likers(session, mediaId).all())
   }
 }
-let media = new Media
-media.login().then(session=>IG.Account.searchForUser(session, 'luna2d').then((user: any) => {
-    media.userMediaHandler(user.id).then(data => {
-      console.log(Object.keys(data[0]))
-      console.log(Object.keys(data[0]).length)
-      console.log(data[0])
-    })
-  })
-)
 // media.getMediaCommentsHandler('2007515707617454139_375222529', function (media: string, data: Array<any>) {
 //     let out: Array<string> = []
 //     for (var prop in data[0].params) {
