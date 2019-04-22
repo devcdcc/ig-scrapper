@@ -57,16 +57,6 @@ export class IGService {
       ).catch(reason => console.error(`Error inserting ${data.length} records into ${collectionName}. Reason ${reason}`))
   }
   /**
-   * 
-   * returns a Bluebird<[session, account]>
-   * you can use spread to map it as (session, account) tuple
-   * spred will return a promise
-   * 
-   */
-  public user() {
-    return this.login().then(session => [session, IG.Account.showProfile(session)])
-  }
-  /**
    * Returns a Bluebird promise with a new session 
    */
   public login() {
