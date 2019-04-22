@@ -3,12 +3,12 @@ const { V1: IG } = require('instagram-private-api');
 import { MongoClient, Collection } from 'mongodb'
 import config from './config'
 import { Promise } from 'bluebird';
-import * as Bluebird from 'bluebird';
+import EventEmiter from 'events'
 // import Sequelize from "sequelize";
 // import { any } from 'bluebird';
 
 const credentials = config.credentials;
-
+const events  = new EventEmiter();
 /***** CONFIGURACIÓN ******/
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "1";
 process.env.UV_THREADPOOL_SIZE = "10";
