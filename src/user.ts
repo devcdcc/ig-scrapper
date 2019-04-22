@@ -2,9 +2,12 @@ import { IGService, removeKey, asParentChildPair, collection as collection } fro
 const { V1: IG } = require('instagram-private-api');
 
 export default class User extends IGService {
-  
+
   public account() {
     return this.login().then(IG.Account.showProfile)
+  }
+  public getAccount(accountId:number) {
+    return this.login().thenReturn(IG.Account.get(accountId))
   }
   /**
    * 
