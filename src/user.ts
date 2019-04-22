@@ -7,7 +7,7 @@ export default class User extends IGService {
     return this.login().then(IG.Account.showProfile)
   }
   public getAccount(accountId:number) {
-    return this.login().thenReturn(IG.Account.get(accountId))
+    return this.login().then(session=>IG.Account.getById(session,accountId))
   }
   /**
    * 
