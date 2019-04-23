@@ -8,7 +8,7 @@ import EventEmiter from 'events'
 // import { any } from 'bluebird';
 
 const credentials = config.credentials;
-const events  = new EventEmiter();
+const events = new EventEmiter();
 /***** CONFIGURACIÓN ******/
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "1";
 process.env.UV_THREADPOOL_SIZE = "10";
@@ -40,10 +40,13 @@ export function asParentChildPair(parent: any, data: Array<any>) {
 }
 export class IGService {
   defaultSize = Infinity
+  public static getEventEmiter(): EventEmiter { return events }
+  public getEventEmiter(): EventEmiter { return events }
   // db = this.mongo.then(client => client.db(config.db.namespace))
   protected asParentChildPair(parent: any, data: Array<any>) {
     return data.map(e => { return { 'parent': parent, 'child': e.id } });
   }
+
   public dataStorage(keyMap: any, data: Array<any>, collectionName: string) {
     return collection(collectionName)
       .then(collection => collection.insertMany(
@@ -60,6 +63,9 @@ export class IGService {
    * Returns a Bluebird promise with a new session 
    */
   public login() {
+    return Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))
+  }
+  public static login(){
     return Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))
   }
 }

@@ -4,10 +4,11 @@ const { V1: IG } = require('instagram-private-api');
 export default class User extends IGService {
 
   public account() {
-    return this.login().then(IG.Account.showProfile)
+    return IGService.login().then(IG.Account.showProfile)
   }
   public getAccount(accountId:number) {
-    return this.login().then(session=>IG.Account.getById(session,accountId))
+    console.log("getting account")
+    return IGService.login().then(session=>IG.Account.getById(session,accountId))
   }
   /**
    * 
