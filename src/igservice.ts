@@ -47,7 +47,10 @@ export class IGService {
     return data.map(e => { return { 'parent': parent, 'child': e.id } });
   }
 
-  public dataStorage(keyMap: any, data: Array<any>, collectionName: string) {
+  public dataStorage(keyMap: any = {}, data: Array<any>, collectionName: string) {
+    return IGService.dataStorage(keyMap, data, collectionName);
+  }
+  public static dataStorage(keyMap: any = {}, data: Array<any>, collectionName: string) {
     return collection(collectionName)
       .then(collection => collection.insertMany(
         [...removeKey(data.map(e => Object.assign(e._params, keyMap)), "_session", "account")])
@@ -65,7 +68,7 @@ export class IGService {
   public login() {
     return Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))
   }
-  public static login(){
+  public static login() {
     return Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))
   }
 }
