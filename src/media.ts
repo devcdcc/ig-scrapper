@@ -9,13 +9,13 @@ export default class Media extends IGService {
    * getMediaCommentsHandler
    */
   public getMediaCommentsHandler(mediaId: string) {
-    return this.login().then(session => new IG.Feed.MediaComments(session, mediaId).all())
+    return this.login().then(session => new IG.Feed.MediaComments(session, mediaId,this.defaultSize).all())
   }
   /**
    * getMediaLikersHandler
    */
   public getMediaLikersHandler(mediaId: string) {
-    return this.login().then(session => new IG.Media.likers(session, mediaId).all())
+    return this.login().then(session => new IG.Media.likers(session, mediaId, this.defaultSize).all())
   }
 }
 // media.getMediaCommentsHandler('2007515707617454139_375222529', function (media: string, data: Array<any>) {

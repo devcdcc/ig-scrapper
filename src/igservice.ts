@@ -39,7 +39,8 @@ export function asParentChildPair(parent: any, data: Array<any>) {
   return data.map(e => { return { 'parent': parent, 'child': e.id } });
 }
 export class IGService {
-  defaultSize = Infinity
+  defaultSize = 10
+  public setDefaultSize(size: number) { this.defaultSize = size }
   public static getEventEmiter(): EventEmiter { return events }
   public getEventEmiter(): EventEmiter { return events }
   // db = this.mongo.then(client => client.db(config.db.namespace))

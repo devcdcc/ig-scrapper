@@ -18,13 +18,19 @@ export default class User extends IGService {
   public search(username:string) {
     return this.login().then(session => IG.Account.searchForUser(session, username))
   }
-  public userMedia(userId: number) {
-    return this.login().then((session: any) => new IG.Feed.UserMedia(session, userId, this.defaultSize).all())
+  public userMedia(userId: number, cursorValue:any = 0) {
+   
+    return this.login().then((session: any) => {
+      let userMedia = new IG.Feed.UserMedia(session, userId, this.defaultSize)
+      userMedia.setCursor(cursorValue)
+      return userMedia.all()})
   }
-  public getUserFollowers(userId: number) {
-    return this.login().then(session => new IG.Feed.AccountFollowers(session, userId, Infinity).all())
+  public getUserFollowers(userId: number, cursorValue:any = false) {
+    return this.login().then(session => {
+      let subject = new IG.Feed.AccountFollowers(session, userId, Infinity)
+      return subject.getSimple(cursorValue)})
   }
   public getUserFollowing(userId: number) {
-    return this.login().then(session => new IG.Feed.AccountFollowing(session, userId, Infinity).all())
+    return this.login().then(session => new IG.Feed.AccountFollowing(session, userId, this.defaultSize).all())
   }
 }
