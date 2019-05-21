@@ -39,7 +39,8 @@ export function asParentChildPair(parent: any, data: Array<any>) {
   return data.map(e => { return { 'parent': parent, 'child': e.id } });
 }
 export class IGService {
-  defaultSize = 10
+  static defaultSize = 10;
+  defaultSize = IGService.defaultSize;
   public setDefaultSize(size: number) { this.defaultSize = size }
   public static getEventEmiter(): EventEmiter { return events }
   public getEventEmiter(): EventEmiter { return events }
@@ -67,7 +68,7 @@ export class IGService {
    * Returns a Bluebird promise with a new session 
    */
   public login() {
-    return Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))
+    return IGService.login();
   }
   public static login() {
     return Promise.resolve(IG.Session.create(device, storage, credentials.email, credentials.password))

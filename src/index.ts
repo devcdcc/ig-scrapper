@@ -1,21 +1,20 @@
 import User from './user'
 import Media from './media'
-import { Promise } from 'bluebird';
 import { IGService } from './igservice';
-let user = new User
+let user = new User;
 // let media = new Media
-user.setDefaultSize(10)
-let userMedia = user.search('luna2d').then(tempUser => tempMediaExecutor(tempUser.id))
+user.setDefaultSize(10);
+// let userMedia = user.search('luna2d').then(tempUser => tempMediaExecutor(tempUser.id))
 
-function tempMediaExecutor(originalUser: number, next = false) {
-    (!next ? user.getUserFollowers(originalUser): user.getUserFollowers(originalUser, next)) .then(data => {
-    console.log(data[0], data[data.length - 1].pk)
-    tempMediaExecutor(originalUser, data[data.length - 1].next_max_id)
-  })
-}
-let account = user.account().then((account: any) =>
-  user.getAccount(account.id).then(account => IGService.getEventEmiter().emit("media", account))
-)
+// function tempMediaExecutor(originalUser: number, next = false) {
+//     (!next ? user.getUserFollowers(originalUser): user.getUserFollowers(originalUser, next)) .then(data => {
+//     console.log(data[0], data[data.length - 1].pk)
+//     tempMediaExecutor(originalUser, data[data.length - 1].next_max_id)
+//   })
+// }
+// let account = user.account().then((account: any) =>
+//   user.getAccount(account.id).then(account => IGService.getEventEmiter().emit("media", account))
+// )
 
 // function handleWithDelay<T>(delayProcess: number = 500, dataSet: Array<any>, handler: (parameter: any) => T) {
 //   type mapFutureType = { acum: number, values: Array<any> }
@@ -29,13 +28,14 @@ let account = user.account().then((account: any) =>
 //   }, initialValue);
 //   return outData.values
 // }
-
-// // let userMedia = user.search('luna2d').then(tempUser => user.userMedia(tempUser.id))
-// // userMedia.then(tempMedia => tempMedia.forEach((media: any) => IGService.getEventEmiter().emit("media", media)))
-// // let account = user.account().then((account: any) =>
-// //   user.getAccount(account.id).then(account => IGService.getEventEmiter().emit("media", account))
-// // )
-
+if (true) {
+  user.userMedia(12281817,"2041776852118113126_12281817").then(tempUser => console.error(JSON.stringify(tempUser.params || tempUser._params)))
+  // let userMedia = user.search('kyliejenner').then(tempUser => console.error(tempUser))
+  //userMedia.then(tempMedia => user.getLikersRaw(tempMedia.items[6].pk, 11568869372))
+}
+// let account = user.account().then((account: any) =>
+//   user.getAccount(account.id).then(account => IGService.getEventEmiter().emit("media", account))
+// )
 
 // let followers = user.search("luna2d")
 //   .then((account: any) => user.getUserFollowers(account.id))
