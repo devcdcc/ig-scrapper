@@ -1,7 +1,9 @@
 import { IGService, removeKey, asParentChildPair, collection as collection } from './igservice'
 const { V1: IG } = require('instagram-private-api');
+import express from 'express';
+import Bluebird = require("bluebird");
 
-export default class User extends IGService {
+class User extends IGService {
 
   public account() {
     return IGService.login().then(IG.Account.showProfile)
@@ -11,7 +13,7 @@ export default class User extends IGService {
     return IGService.login().then(session => IG.Account.getById(session, accountId))
   }
   /**
-   * 
+   *
    * @param username username on instagram
    * @returns [[Bluebird<account:any>]] where account contains accounts details.
    */
@@ -36,7 +38,7 @@ export default class User extends IGService {
           Object.keys(user).indexOf("latest_reel_media") >= 0
         );
 
-        
+
         let users:Array<any> =  x.users.map((_:any) => _.pk)
         console.log(
           users[0],
@@ -56,3 +58,12 @@ export default class User extends IGService {
     return this.login().then(session => new IG.Feed.AccountFollowing(session, userId, this.defaultSize).all())
   }
 }
+const router = express.Router();
+
+router.get("/:userId/media", async (req, res) => {
+    let userId: number = req.params["userId"];
+    let next_max_id: string = req.query["next_max_id"];
+
+    res.send(await User.userMedia(userId, next_max_id))
+});
+export default router;

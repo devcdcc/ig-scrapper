@@ -1,9 +1,9 @@
-import User from './user'
-import Media from './media'
-import { IGService } from './igservice';
-let user = new User;
-// let media = new Media
-user.setDefaultSize(10);
+// import User from './user'
+// import Media from './media'
+// import { IGService } from './igservice';
+// let user = new User;
+// // let media = new Media
+// user.setDefaultSize(10);
 // let userMedia = user.search('luna2d').then(tempUser => tempMediaExecutor(tempUser.id))
 
 // function tempMediaExecutor(originalUser: number, next = false) {
@@ -28,11 +28,11 @@ user.setDefaultSize(10);
 //   }, initialValue);
 //   return outData.values
 // }
-if (true) {
-  user.userMedia(12281817,"2041776852118113126_12281817").then(tempUser => console.error(JSON.stringify(tempUser.params || tempUser._params)))
-  // let userMedia = user.search('kyliejenner').then(tempUser => console.error(tempUser))
-  //userMedia.then(tempMedia => user.getLikersRaw(tempMedia.items[6].pk, 11568869372))
-}
+// if (true) {
+//   user.userMedia(12281817,"2041776852118113126_12281817").then(tempUser => console.error(JSON.stringify(tempUser.params || tempUser._params)))
+//   // let userMedia = user.search('kyliejenner').then(tempUser => console.error(tempUser))
+//   //userMedia.then(tempMedia => user.getLikersRaw(tempMedia.items[6].pk, 11568869372))
+// }
 // let account = user.account().then((account: any) =>
 //   user.getAccount(account.id).then(account => IGService.getEventEmiter().emit("media", account))
 // )
