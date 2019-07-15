@@ -1,7 +1,7 @@
-import { IGService, removeKey, asParentChildPair, collection as collection } from './igservice'
+import { IGService } from './igservice'
 const { V1: IG } = require('instagram-private-api');
 import express from 'express';
-import Bluebird = require("bluebird");
+import { any } from 'bluebird';
 
 class User extends IGService {
 
@@ -52,7 +52,7 @@ class User extends IGService {
     return this.login().then(session => {
       let subject = new IG.Feed.AccountFollowers(session, userId, IGService.defaultSize);
       return subject.getSimple(cursorValue)
-    }).catch(_ => {})
+    }).catch(_ => false)
   }
   public getUserFollowers(userId: number, cursorValue: any = false) {
     return User.getUserFollowers(userId, cursorValue)
@@ -61,47 +61,59 @@ class User extends IGService {
     return this.login().then(session => {
       let subject = new IG.Feed.AccountFollowing(session, userId, IGService.defaultSize);
       return subject.getSimple(cursorValue)
-    }).catch(_ => {})
+    }).catch(_ => false)
   }
   public getUserFollowing(userId: number) {
     return this.login().then(session => new IG.Feed.AccountFollowing(session, userId, this.defaultSize).all())
   }
 
   public static getRawById(userId: number){
-    return User.login().then(session => new IG.Account.getRawById(session, userId)).catch(_ => {})
+    return User.login().then(session => new IG.Account.getRawById(session, userId)).catch(_ => false)
   }
   public static resolveUsername(username: string){
-    return User.login().then(session => new IG.Account.searchRaw(session, username)).catch(_ => {})
+    return User.login().then(session => new IG.Account.searchRaw(session, username)).catch(_ => false)
   }
 }
 const router = express.Router();
 
+function makeResponse(value:any, userId:number, res: express.Response, next_max_id: string = ""){
+  if(!value)
+    if(next_max_id) return res.status(404).json({"userId": userId, "next_max_id": next_max_id})
+    else return res.status(404).json({"userId": userId})
+  else res.send(value)
+  
+}
 router.get("/:userId", async (req, res) => {
   let userId: number = req.params["userId"];
-  res.send(await User.getRawById(userId))
+  User.getRawById(userId)
+  .then(value=> makeResponse(value, userId, res));
+  //res.send(userResponse)
 });
 
 router.get("/:userId/media", async (req, res) => {
   let userId: number = req.params["userId"];
   let next_max_id: string = req.query["next_max_id"];
-  res.send(await User.userMedia(userId, next_max_id))
+  User.userMedia(userId, next_max_id)
+  .then(value=> makeResponse(value, userId, res,next_max_id))
 });
 
 router.get("/:userId/followers", async (req, res) => {
   let userId: number = req.params["userId"];
   let next_max_id: string = req.query["next_max_id"];
-  res.send(await User.getUserFollowers(userId, next_max_id))
+   User.getUserFollowers(userId, next_max_id)
+   .then(value=> makeResponse(value, userId, res,next_max_id))
 });
 
 router.get("/:userId/following", async (req, res) => {
   let userId: number = req.params["userId"];
   let next_max_id: string = req.query["next_max_id"];
-  res.send(await User.getUserFollowing(userId, next_max_id))
+  User.getUserFollowing(userId, next_max_id)
+  .then(value=> makeResponse(value, userId, res,next_max_id))
 });
 
 router.get("/:username/resolve", async (req, res) => {
   let userId: string = req.params["username"];
-  res.send(await User.resolveUsername(userId))
+  User.resolveUsername(userId).then(response => res.send(response))
 });
 
 
