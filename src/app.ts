@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import userRouter from "./user";
+import userRouter from "./user-router";
 const app = express();
 
 app.use(bodyParser({limit: '50mb'}));
