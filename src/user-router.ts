@@ -1,4 +1,6 @@
 
+import config from './config'
+const credentials = config.credentials;
 import User from './user'
 import express from 'express';
 const router = express.Router();
@@ -7,13 +9,12 @@ function makeResponse(value:any, userId:number, res: express.Response, next_max_
   if(!value)
     if(next_max_id) return res.status(404).json({"userId": userId, "next_max_id": next_max_id})
     else return res.status(404).json({"userId": userId})
-  else res.send(value)
-  
+  else res.send({"scrapperId": credentials.email, ...value})
 }
 router.get("/:userId", async (req, res) => {
   let userId: number = req.params["userId"];
   User.getRawById(userId)
-  .then(value=> makeResponse(value, userId, res));
+  .then(value=> makeResponse(value, userId, res, ""));
   //res.send(userResponse)
 });
 
