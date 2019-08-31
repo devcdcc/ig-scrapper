@@ -1,5 +1,5 @@
 import { IGService } from './igservice'
-const { V1: IG } = require('instagram-private-api');
+const { V1: IG } = require('./instagram-private-api');
 import { any } from 'bluebird';
 
 class User extends IGService {

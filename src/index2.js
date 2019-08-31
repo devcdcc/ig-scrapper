@@ -1,4 +1,4 @@
-var Client = require('instagram-private-api').V1;
+var Client = require('./instagram-private-api').V1;
 var device = new Client.Device('danielc@acmecomunicacion.com');
 var storage = new Client.CookieFileStorage(__dirname + '/../cookies/someuser.json');
 

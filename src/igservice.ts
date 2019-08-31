@@ -1,4 +1,4 @@
-const { V1: IG } = require('instagram-private-api');
+const { V1: IG } = require('./instagram-private-api');
 //import {Promise} from 'bluebird'
 import { MongoClient, Collection } from 'mongodb'
 import config from './config'

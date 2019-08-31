@@ -1,5 +1,5 @@
 import { IGService } from './igservice'
-const { V1: IG } = require('instagram-private-api');
+const { V1: IG } = require('./instagram-private-api');
 
 export default class Media extends IGService {
   public userMediaHandler(userId: number) {
