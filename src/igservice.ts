@@ -27,7 +27,7 @@ export function removeKey(obj: any[] | any, ...keySet: Array<string>) {
   if (obj != null && (typeof obj.isArray == 'function' || typeof obj.map == 'function' || typeof obj.forEach == 'function')) {
     return obj.map((data: any) => removeKey(data, ...keySet))
   } else
-    for (var prop in obj) {
+    for (let prop in obj) {
       if (keySet.includes(prop))
         delete obj[prop];
       else if (typeof obj[prop] === 'object')
