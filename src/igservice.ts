@@ -16,10 +16,10 @@ process.env.UV_THREADPOOL_SIZE = "10";
 var device = new IG.Device('danielc-laptop');
 var storage = new IG.CookieFileStorage(__dirname + '/../cookies/someuser.json');
 
-const mongo: Promise<MongoClient> = MongoClient.connect(config.db.url, config.db.options)
-export function collection(collectionName: string) {
-  return mongo.then(client => client.db(config.db.namespace)).then(db => db.collection(collectionName))
-}
+// const mongo: Promise<MongoClient> = MongoClient.connect(config.db.url, config.db.options)
+// export function collection(collectionName: string) {
+//   return mongo.then(client => client.db(config.db.namespace)).then(db => db.collection(collectionName))
+// }
 /**
  * Default class with connection
  */
@@ -49,21 +49,21 @@ export class IGService {
     return data.map(e => { return { 'parent': parent, 'child': e.id } });
   }
 
-  public dataStorage(keyMap: any = {}, data: Array<any>, collectionName: string) {
-    return IGService.dataStorage(keyMap, data, collectionName);
-  }
-  public static dataStorage(keyMap: any = {}, data: Array<any>, collectionName: string) {
-    return collection(collectionName)
-      .then(collection => collection.insertMany(
-        [...removeKey(data.map(e => Object.assign(e._params, keyMap)), "_session", "account")])
-      )
-      .then(result =>
-        result.insertedCount == data.length ?
-          console.log(`All has been inserted ${result.insertedCount} records into ${collectionName}.`)
-          :
-          console.error(`Error, only has been inserted ${result.insertedCount} of ${data.length} records into ${collectionName}.`)
-      ).catch(reason => console.error(`Error inserting ${data.length} records into ${collectionName}. Reason ${reason}`))
-  }
+  // public dataStorage(keyMap: any = {}, data: Array<any>, collectionName: string) {
+  //   return IGService.dataStorage(keyMap, data, collectionName);
+  // }
+  // public static dataStorage(keyMap: any = {}, data: Array<any>, collectionName: string) {
+  //   return collection(collectionName)
+  //     .then(collection => collection.insertMany(
+  //       [...removeKey(data.map(e => Object.assign(e._params, keyMap)), "_session", "account")])
+  //     )
+  //     .then(result =>
+  //       result.insertedCount == data.length ?
+  //         console.log(`All has been inserted ${result.insertedCount} records into ${collectionName}.`)
+  //         :
+  //         console.error(`Error, only has been inserted ${result.insertedCount} of ${data.length} records into ${collectionName}.`)
+  //     ).catch(reason => console.error(`Error inserting ${data.length} records into ${collectionName}. Reason ${reason}`))
+  // }
   /**
    * Returns a Bluebird promise with a new session 
    */

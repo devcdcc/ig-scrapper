@@ -1,4 +1,4 @@
-import { IGService, removeKey, asParentChildPair, collection as collection } from './igservice'
+import { IGService, removeKey, asParentChildPair } from './igservice'
 const { V1: IG } = require('instagram-private-api');
 import express from 'express';
 import Bluebird = require("bluebird");
